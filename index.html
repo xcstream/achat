@@ -9,14 +9,17 @@
 <script src="https://cdn.bootcss.com/paho-mqtt/1.0.2/mqttws31.min.js"></script>
 <script>
     var clientId = "clientId" + new Date().getTime() +'_' + Math.random();
-    client = new Paho.MQTT.Client("message.all-dream.com", Number(8083), clientId);
+    client = new Paho.MQTT.Client("home.appxc.com", Number(10097), clientId);
 
     // set callback handlers
     client.onConnectionLost = onConnectionLost;
     client.onMessageArrived = onMessageArrived;
 
     // connect the client
-    client.connect({onSuccess:onConnect});
+    client.connect({
+        useSSL:true,
+        onSuccess:onConnect
+    });
 
     // called when the client connects
     function onConnect() {
