@@ -1,0 +1,46 @@
+<html>
+
+<head>
+    <meta charset="utf-8"/>
+    <title>achat</title>
+</head>
+<body>
+
+<script src="https://cdn.bootcss.com/paho-mqtt/1.0.2/mqttws31.min.js"></script>
+<script>
+    var clientId = "clientId" + new Date().getTime() +'_' + Math.random();
+    client = new Paho.MQTT.Client("message.all-dream.com", Number(8083), clientId);
+
+    // set callback handlers
+    client.onConnectionLost = onConnectionLost;
+    client.onMessageArrived = onMessageArrived;
+
+    // connect the client
+    client.connect({onSuccess:onConnect});
+
+    // called when the client connects
+    function onConnect() {
+        // Once a connection has been made, make a subscription and send a message.
+        console.log("onConnect");
+    }
+
+    // called when the client loses its connection
+    function onConnectionLost(responseObject) {
+        if (responseObject.errorCode !== 0) {
+            console.log("onConnectionLost:"+responseObject.errorMessage);
+        }
+    }
+
+    // called when a message arrives
+    function onMessageArrived(message) {
+        console.log("onMessageArrived:"+message.payloadString);
+    }
+
+    function send(jsonStr){
+        var message = new Paho.MQTT.Message('hello');
+        client.send(message);
+    }
+
+</script>
+</body>
+</html>
