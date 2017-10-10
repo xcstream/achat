@@ -1,92 +1,41 @@
 <html>
-<head>
-    <meta charset="utf-8"/>
-    <title>尬聊</title>
-</head>
+<head><meta charset="utf-8"/><title>尬聊-最简易的群聊网页</title></head>
 <body>
 <script src="https://cdn.bootcss.com/vue/2.4.4/vue.min.js"></script>
 <script src="https://cdn.bootcss.com/element-ui/1.4.6/index.js"></script>
 <script src="https://cdn.bootcss.com/paho-mqtt/1.0.2/mqttws31.min.js"></script>
 <link href="https://cdn.bootcss.com/element-ui/1.4.6/theme-default/index.css" rel="stylesheet">
 <div>
-    <div style="width">
-        <el-input style="width:400px" v-model="tosend"></el-input>
-        <el-button @click="send">
-            send
-        </el-button>
-    </div>
-    <div v-for="m in messages">
-        {{m}}
-    </div>
+    <el-card style="height: 100%">
+        <div style="width:100%;position:absolute;bottom: 30px">
+            <el-input style="width:85%" v-model="tosend" @keyup.enter.native="send"></el-input>
+            <el-button @click="send">send</el-button>
+        </div>
+        <div id="chat" style="margin-bottom: 100px;">
+            <div v-for="m in messages">
+                <el-tag type="primary" style="margin:2px">{{m}}</el-tag>
+            </div>
+        </div>
+    </el-card>
 </div>
 <script>
-    var clientId = "" + parseInt(new Date().getTime() * Math.random());
-    client = new Paho.MQTT.Client("home.appxc.com", Number(10100), clientId);
-
-    // set callback handlers
-    client.onConnectionLost = onConnectionLost;
-    client.onMessageArrived = onMessageArrived;
-
-    // connect the client
-    client.connect({
-        useSSL:true,
-        onSuccess:onConnect
-    });
-
-    // called when the client connects
-    function onConnect() {
-        // Once a connection has been made, make a subscription and send a message.
-
-        client.subscribe("client:"+clientId)
-        client.subscribe("public")
-
-        send({
-            action:'init',
-            client:clientId
-        })
-    }
-
-    // called when the client loses its connection
-    function onConnectionLost(responseObject) {
-        if (responseObject.errorCode !== 0) {
-        }
-    }
-
-    // called when a message arrives
-    function onMessageArrived(message) {
-        try{
-            var payload = JSON.parse(message.payloadString)
-            window.vm.messages.push(payload.content)
-        }catch (e){
-            console.log(e)
-        }
-    }
-
-    function send(obj){
-        message = new Paho.MQTT.Message(JSON.stringify(obj));
-        message.destinationName = "public";
-        client.send(message);
-    }
+    var client = new Paho.MQTT.Client("home.appxc.com", Number(10100), ""+Math.random())
+    client.onMessageArrived = function(message) { window.vm.messages.push(JSON.parse(message.payloadString).content)}
+    client.connect({useSSL:true, onSuccess:function(){ client.subscribe("public")}})
     window.vm=new Vue({
         el:'body>div',
-        data:{
-            name:clientId,
-            messages:[],
-            tosend:''
-        },
+        data:{messages:[], tosend:''},
         methods:{
             send:function(){
-                send({
-                    content:this.tosend,
-                    client:clientId,
-                    nickname:'wo'
-                })
-            },
-//            addmessage:function (msg) {
-//
-//            }
+                if(this.tosend == "") return
+                var payload = ({content:this.tosend})
+                var message = new Paho.MQTT.Message(JSON.stringify(payload))
+                message.destinationName = "public"
+                client.send(message)
+                this.tosend = ""
+            }
         }
-        })
+    })
 </script>
 </body>
 </html>
