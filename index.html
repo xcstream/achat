@@ -5,10 +5,21 @@
     <title>achat</title>
 </head>
 <body>
-
+<script src="https://cdn.bootcss.com/vue/2.4.4/vue.min.js"></script>
+<script src="https://cdn.bootcss.com/element-ui/1.4.6/index.js"></script>
 <script src="https://cdn.bootcss.com/paho-mqtt/1.0.2/mqttws31.min.js"></script>
+<link href="https://cdn.bootcss.com/element-ui/1.4.6/theme-default/index.css" rel="stylesheet">
+<div id="app">
+    <el-input style="width:400px" v-model="tosend"></el-input>
+    <el-button @click="send">
+        send
+    </el-button>
+    <div v-for="m in messages">
+        {{m}}
+    </div>
+</div>
 <script>
-    var clientId = "clientId" + new Date().getTime() +'_' + Math.random();
+    var clientId = "" + parseInt(new Date().getTime() * Math.random());
     client = new Paho.MQTT.Client("home.appxc.com", Number(10100), clientId);
 
     // set callback handlers
@@ -24,26 +35,57 @@
     // called when the client connects
     function onConnect() {
         // Once a connection has been made, make a subscription and send a message.
-        console.log("onConnect");
+
+        client.subscribe("client:"+clientId)
+        client.subscribe("public")
+
+        send({
+            action:'init',
+            client:clientId
+        })
     }
 
     // called when the client loses its connection
     function onConnectionLost(responseObject) {
         if (responseObject.errorCode !== 0) {
-            console.log("onConnectionLost:"+responseObject.errorMessage);
         }
     }
 
     // called when a message arrives
     function onMessageArrived(message) {
-        console.log("onMessageArrived:"+message.payloadString);
+        try{
+            var payload = JSON.parse(message.payloadString)
+            window.vm.messages.push(payload.content)
+        }catch (e){
+            console.log(e)
+        }
     }
 
-    function send(jsonStr){
-        var message = new Paho.MQTT.Message('hello');
+    function send(obj){
+        message = new Paho.MQTT.Message(JSON.stringify(obj));
+        message.destinationName = "public";
         client.send(message);
     }
-
+    window.vm=new Vue({
+        el:'#app',
+        data:{
+            name:clientId,
+            messages:[],
+            tosend:''
+        },
+        methods:{
+            send:function(){
+                send({
+                    content:this.tosend,
+                    client:clientId,
+                    nickname:'wo'
+                })
+            },
+//            addmessage:function (msg) {
+//
+//            }
+        }
+        })
 </script>
 </body>
 </html>
