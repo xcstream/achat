@@ -9,7 +9,7 @@
 <script src="https://cdn.bootcss.com/paho-mqtt/1.0.2/mqttws31.min.js"></script>
 <script>
     var clientId = "clientId" + new Date().getTime() +'_' + Math.random();
-    client = new Paho.MQTT.Client("home.appxc.com", Number(10097), clientId);
+    client = new Paho.MQTT.Client("home.appxc.com", Number(10100), clientId);
 
     // set callback handlers
     client.onConnectionLost = onConnectionLost;
