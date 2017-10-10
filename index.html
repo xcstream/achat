@@ -1,19 +1,20 @@
 <html>
-
 <head>
     <meta charset="utf-8"/>
-    <title>achat</title>
+    <title>尬聊</title>
 </head>
 <body>
 <script src="https://cdn.bootcss.com/vue/2.4.4/vue.min.js"></script>
 <script src="https://cdn.bootcss.com/element-ui/1.4.6/index.js"></script>
 <script src="https://cdn.bootcss.com/paho-mqtt/1.0.2/mqttws31.min.js"></script>
 <link href="https://cdn.bootcss.com/element-ui/1.4.6/theme-default/index.css" rel="stylesheet">
-<div id="app">
-    <el-input style="width:400px" v-model="tosend"></el-input>
-    <el-button @click="send">
-        send
-    </el-button>
+<div>
+    <div style="width">
+        <el-input style="width:400px" v-model="tosend"></el-input>
+        <el-button @click="send">
+            send
+        </el-button>
+    </div>
     <div v-for="m in messages">
         {{m}}
     </div>
@@ -67,7 +68,7 @@
         client.send(message);
     }
     window.vm=new Vue({
-        el:'#app',
+        el:'body>div',
         data:{
             name:clientId,
             messages:[],
