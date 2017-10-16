@@ -2,7 +2,7 @@ var mqtt=require('mqtt')
 var fetch=require('node-fetch')
 
 var mqtt = require('mqtt')
-var client  = mqtt.connect('wss://home.appxc.com:10100')
+var client  = mqtt.connect('mqtt://localhost:1883')
 
 client.on('connect', function () {
     console.log('connect')
