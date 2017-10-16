@@ -25,11 +25,6 @@
         methods:{
             send:function(){
                 if(this.tosend == "") return
-                fetch('http://www.tuling123.com/openapi/api',opt()).then( res => {
-                    res.json().then( obj => {
-                        console.log(obj)
-                     })})
-
                 var payload = ({content:this.tosend})
                 var message = new Paho.MQTT.Message(JSON.stringify(payload))
                 message.destinationName = "public"
@@ -38,18 +33,6 @@
             }
         }
     })
-    function opt() {
-        return {
-            method:"POST",
-            credentials: 'include',
-            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-            body:JSON.stringify({
-                    key:'3580c8035c924c6ea049a12240639e4a',
-                    info:vm.tosend,
-                    userid:client
-            })
-        }
-    }
 </script>
 </body>
 </html>
