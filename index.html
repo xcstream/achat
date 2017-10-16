@@ -8,13 +8,10 @@
 <div>
     <el-card style="height: 100%">
         <div style="width:100%;position:absolute;bottom: 30px">
-            <el-input placeholder="输入内容 Enter键发送"
-                    style="width:90%" v-model="tosend" @keyup.enter.native="send"></el-input>
+            <el-input placeholder="输入内容 Enter键发送" style="width:90%" v-model="tosend" @keyup.enter.native="send"></el-input>
         </div>
         <div id="chat" style="margin-bottom: 100px;">
-            <div v-for="m in messages">
-                <el-tag type="primary" style="margin:2px">{{m}}</el-tag>
-            </div>
+            <div v-for="m in messages"><el-tag type="primary" style="margin:2px">{{m}}</el-tag></div>
         </div>
     </el-card>
 </div>
