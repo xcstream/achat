@@ -1,0 +1,25 @@
+{
+  "name": "achat",
+  "version": "1.0.0",
+  "description": "一个简易的聊天室，代码就一个静态网页。 服务端是个普通的mqtt broker。",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xcstream/achat.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xcstream/achat/issues"
+  },
+  "homepage": "https://github.com/xcstream/achat#readme",
+  "dependencies": {
+    "mqtt": "^2.13.0",
+    "node-fetch": "^1.7.3",
+    "paho": "^1.0.0"
+  }
+}
