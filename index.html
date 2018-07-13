@@ -16,7 +16,7 @@
     </el-card>
 </div>
 <script>
-    var client = new Paho.MQTT.Client("home.appxc.com", Number(10100), ""+Math.random())
+    var client = new Paho.MQTT.Client("am.appxc.com", Number(8084), ""+Math.random())
     client.onMessageArrived = function(message) { window.vm.messages.push(JSON.parse(message.payloadString).content)}
     client.connect({useSSL:true, onSuccess:function(){ client.subscribe("public")}})
     window.vm=new Vue({
