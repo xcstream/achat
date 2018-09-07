@@ -4,8 +4,8 @@
   "theme_color": "#396a90",
   "background_color": "#2196f3",
   "display": "standalone",
-  "Scope": "/",
-  "start_url": "/",
+  "Scope": "/achat",
+  "start_url": "/achat",
   "icons": [
     {
       "src": "images/icons/icon-72x72.png",
