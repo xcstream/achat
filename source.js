@@ -17,34 +17,64 @@ Date.prototype.format = function(format) //author: meizz
                 ("00"+ o[k]).substr((""+ o[k]).length));
     return format;
 }
+
+function scroll() {
+    setTimeout(function () {
+        var scrollDom = document.getElementById('chat');
+        scrollDom.scrollTop = scrollDom.scrollHeight
+    },100)
+    setTimeout(function () {
+        var scrollDom = document.getElementById('chat');
+        scrollDom.scrollTop = scrollDom.scrollHeight
+    },300)
+}
+
 var huajilist = `
     0.jpg   12.jpeg 16.jpeg 2.jpeg  23.jpeg 27.jpeg 30.jpeg 34.gif  5.jpg   9.jpeg
     1.gif   13.jpeg 17.jpeg 20.jpeg 24.jpeg 28.jpeg 31.jpeg 35.gif  6.jpeg
     10.jpeg 14.jpeg 18.gif  21.jpeg 25.png  29.jpeg 32.jpg  36.gif  7.jpg
     11.jpeg 15.jpeg 19.jpeg 22.jpeg 26.jpeg 3.jpeg  33.gif  4.jpeg  8.jpeg`.split(' ').filter(x=>x.length>3)
 
-var client = new Paho.MQTT.Client("am.appxc.com", Number(8084), ""+Math.random())
+var clientid = ""+Math.random() + new Date().getTime()
+var client = new Paho.MQTT.Client("am.appxc.com", Number(8084), clientid)
 window.chatname = localStorage['chatname']||'匿名用户'
 client.onMessageArrived = function(message) {
     var payload = JSON.parse(message.payloadString)
-    window.vm.messages.push(payload.content)
-    setTimeout(function () {
-        var scrollDom = document.getElementById('chat');
-        scrollDom.scrollTop = scrollDom.scrollHeight
 
-        try{
-            var utterThis = new window.SpeechSynthesisUtterance(payload.content.name+'说'+payload.content.text);
-            window.speechSynthesis.speak(utterThis);
-        }catch (e) {
-            console.log(e)
-        }
-    },120)
+    console.log(payload)
 
+    if(payload.type==1){
+        window.vm.messages.push(payload.content)
+        setTimeout(function () {
+            var scrollDom = document.getElementById('chat');
+            scrollDom.scrollTop = scrollDom.scrollHeight
 
+            try{
+                var utterThis = new window.SpeechSynthesisUtterance(payload.content.name+'说'+payload.content.text);
+                window.speechSynthesis.speak(utterThis);
+            }catch (e) {
+                console.log(e)
+            }
+        },120)
+    }
+    if(payload.type==2){
+        vm.messages = payload.messages.map(x=>x.content)
+        scroll()
+    }
 }
-var topic = window.location.host
 
-client.connect({useSSL:true, onSuccess:function(){ client.subscribe(topic)}})
+var topic = window.location.hostname
+
+client.connect({useSSL:true, onSuccess:function(){
+    client.subscribe(topic)
+    client.subscribe(clientid)
+
+    var payload = ({clientid: clientid})
+    var message = new Paho.MQTT.Message(JSON.stringify(payload))
+    message.destinationName = topic+'_init'
+    client.send(message)
+
+}})
 window.vm=new Vue({el:'body>div',data:{
         messages:[],
         tosend:'',
@@ -52,6 +82,11 @@ window.vm=new Vue({el:'body>div',data:{
         screenHeight: document.body.clientHeight,
         ch: (document.body.clientHeight-120)+'px',
         bh:(document.body.clientHeight-90)+'px'
+    },
+    watch:{
+        messages:function () {
+            scroll()
+        }
     },
     mounted:function(){
         window.onresize = () => {
@@ -101,7 +136,7 @@ if(this.tosend.substr(0,1) == '/') {
             time:''+new Date().format('hh:mm:ss') ,
             url:huajilist[rand]
         }
-        var payload = ({content: content })
+        var payload = ({ type:1, content: content })
         var message = new Paho.MQTT.Message(JSON.stringify(payload))
         message.destinationName = topic
         client.send(message)
@@ -113,16 +148,11 @@ if(this.tosend.substr(0,1) == '/') {
         time:''+new Date().format('hh:mm:ss') ,
         text:this.tosend
     }
-    var payload = ({content: content })
+    var payload = ({ type:1, content: content })
     var message = new Paho.MQTT.Message(JSON.stringify(payload))
     message.destinationName = topic
     client.send(message)
 }
     this.tosend = ""
-    setTimeout(function () {
-        var scrollDom = document.getElementById('chat');
-        scrollDom.scrollTop = scrollDom.scrollHeight
-    },100)
-
     }}
 })

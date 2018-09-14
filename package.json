@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/xcstream/achat#readme",
   "dependencies": {
+    "chalk": "^2.4.1",
     "mqtt": "^2.13.0",
     "node-fetch": "^1.7.3",
     "paho": "^1.0.0",
