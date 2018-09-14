@@ -28,18 +28,18 @@ window.chatname = localStorage['chatname']||'匿名用户'
 client.onMessageArrived = function(message) {
     var payload = JSON.parse(message.payloadString)
     window.vm.messages.push(payload.content)
-
     setTimeout(function () {
         var scrollDom = document.getElementById('chat');
         scrollDom.scrollTop = scrollDom.scrollHeight
-    },100)
-    try{
-        var utterThis = new window.SpeechSynthesisUtterance(payload.content.name+'说'+payload.content.text);
-        window.speechSynthesis.speak(utterThis);
-    }catch(e){
 
-    }
-}
+        try{
+            var utterThis = new window.SpeechSynthesisUtterance(payload.content.name+'说'+payload.content.text);
+            window.speechSynthesis.speak(utterThis);
+        }catch (e) {
+            console.log(e)
+        }
+    },120)
+
 
 }
 var topic = window.location.host
@@ -125,3 +125,4 @@ if(this.tosend.substr(0,1) == '/') {
     },100)
 
     }}
+})
