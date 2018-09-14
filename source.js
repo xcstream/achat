@@ -26,11 +26,20 @@ var huajilist = `
 var client = new Paho.MQTT.Client("am.appxc.com", Number(8084), ""+Math.random())
 window.chatname = localStorage['chatname']||'匿名用户'
 client.onMessageArrived = function(message) {
-    window.vm.messages.push(JSON.parse(message.payloadString).content)
+    var payload = JSON.parse(message.payloadString)
+    window.vm.messages.push(payload.content)
+
     setTimeout(function () {
         var scrollDom = document.getElementById('chat');
         scrollDom.scrollTop = scrollDom.scrollHeight
     },100)
+    try{
+        var utterThis = new window.SpeechSynthesisUtterance(payload.content.name+'说'+payload.content.text);
+        window.speechSynthesis.speak(utterThis);
+    }catch(e){
+
+    }
+}
 
 }
 var topic = window.location.host
@@ -116,4 +125,3 @@ if(this.tosend.substr(0,1) == '/') {
     },100)
 
     }}
-})
