@@ -107,52 +107,56 @@ window.vm=new Vue({el:'body>div',data:{
 
     },
 
-    methods:{send:function(){
-if(this.tosend == "") return
+    methods:{
+        imageLoaded:function(){
+            scroll()
+        },
 
+    send:function(){
+        if(this.tosend == "") return
 
-if(this.tosend.substr(0,1) == '/') {
-    if(this.tosend.indexOf('/name ') == 0){
-        window.chatname = this.tosend.substr('/name '.length)
-        localStorage['chatname'] = window.chatname
-        vm.messages.push({
-            type:'alert',
-            alert:'名字已经修改为:' + window.chatname
-        })
-    }
-    if(this.tosend.indexOf('/help') == 0){
-        vm.messages.push({
-            type:'alert',
-            alert:'帮助',
-            description:
-                `[修改自己的名字    /name 名字] [滑稽  /huaji]`
-        })
-    }
-    if(this.tosend.indexOf('/huaji') == 0){
-        var rand = Math.floor( Math.random()*huajilist.length)
-        var content = {
-            type:'huaji',
-            name: window.chatname,
-            time:''+new Date().format('hh:mm:ss') ,
-            url:huajilist[rand]
+        if(this.tosend.substr(0,1) == '/') {
+            if(this.tosend.indexOf('/name ') == 0){
+                window.chatname = this.tosend.substr('/name '.length)
+                localStorage['chatname'] = window.chatname
+                vm.messages.push({
+                    type:'alert',
+                    alert:'名字已经修改为:' + window.chatname
+                })
+            }
+            if(this.tosend.indexOf('/help') == 0){
+                vm.messages.push({
+                    type:'alert',
+                    alert:'帮助',
+                    description:
+                        `[修改自己的名字    /name 名字] [滑稽  /huaji]`
+                })
+            }
+            if(this.tosend.indexOf('/huaji') == 0){
+                var rand = Math.floor( Math.random()*huajilist.length)
+                var content = {
+                    type:'huaji',
+                    name: window.chatname,
+                    time:''+new Date().format('hh:mm:ss') ,
+                    url:huajilist[rand]
+                }
+                var payload = ({ type:1, content: content })
+                var message = new Paho.MQTT.Message(JSON.stringify(payload))
+                message.destinationName = topic
+                client.send(message)
+            }
+        }else{
+            var content = {
+                type:'message',
+                name: window.chatname,
+                time:''+new Date().format('hh:mm:ss') ,
+                text:this.tosend
+            }
+            var payload = ({ type:1, content: content })
+            var message = new Paho.MQTT.Message(JSON.stringify(payload))
+            message.destinationName = topic
+            client.send(message)
         }
-        var payload = ({ type:1, content: content })
-        var message = new Paho.MQTT.Message(JSON.stringify(payload))
-        message.destinationName = topic
-        client.send(message)
-    }
-}else{
-    var content = {
-        type:'message',
-        name: window.chatname,
-        time:''+new Date().format('hh:mm:ss') ,
-        text:this.tosend
-    }
-    var payload = ({ type:1, content: content })
-    var message = new Paho.MQTT.Message(JSON.stringify(payload))
-    message.destinationName = topic
-    client.send(message)
-}
-    this.tosend = ""
-    }}
+            this.tosend = ""
+            }}
 })
