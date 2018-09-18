@@ -102,10 +102,8 @@ window.vm=new Vue({el:'body>div',data:{
                 vm.screenHeight = document.body.clientHeight
                 vm.ch = (document.body.clientHeight-120)+'px'
                 vm.bh = (document.body.clientHeight-90)+'px'
-
             })()
         }
-
     },
     watch:{
         screenHeight:function(){
