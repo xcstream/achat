@@ -93,12 +93,11 @@ client.on('message', function (topic, message) {
                                 type:'huaji',
                                 name: payload.chatname,
                                 time:''+new Date().format('hh:mm:ss') ,
-                                url: lista[0].image_url
+                                url: lista[0].image_url,
+                                text:key
                             } })
                         client.publish(default_topic, JSON.stringify(toSend))
                     }else{
-
-
                         var toSend = ({ type:1, content: {
                                 type:'message',
                                 name: payload.chatname,
