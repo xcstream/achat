@@ -49,13 +49,14 @@ client.onMessageArrived = function(message) {
         setTimeout(function () {
             var scrollDom = document.getElementById('chat');
             scrollDom.scrollTop = scrollDom.scrollHeight
-
-            try{
-                var utterThis = new window.SpeechSynthesisUtterance(payload.content.name+'说'+payload.content.text);
-                window.speechSynthesis.speak(utterThis);
-            }catch (e) {
-                console.log(e)
-            }
+            setTimeout(function () {
+                try{
+                    var utterThis = new window.SpeechSynthesisUtterance(payload.content.name+'说'+payload.content.text);
+                    window.speechSynthesis.speak(utterThis);
+                }catch (e) {
+                    console.log(e)
+                }
+            },400)
         },120)
     }
     if(payload.type==2){
@@ -130,7 +131,7 @@ window.vm=new Vue({el:'body>div',data:{
                     type:'alert',
                     alert:'帮助',
                     description:
-                        `[修改自己的名字    /name 名字] [滑稽  /huaji]`
+                        `[修改自己的名字    /name 名字] [滑稽  /huaji] [发表情 /(搜索条件)]`
                 })
             }else
             if(this.tosend.indexOf('/huaji') == 0){

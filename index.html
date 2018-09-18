@@ -34,7 +34,7 @@
 <div v-cloak>
     <el-card style="height:93%" :style="{'height':bh}">
         <div style="width:93%;position:absolute;bottom: 30px">
-            <el-input placeholder="输入内容 Enter键发送 输入/help显示帮助" style="width:90%" v-model="tosend" @keyup.enter.native="send"></el-input>
+            <el-input placeholder="输入内容 Enter键发送 输入  /name 名字 更换名字;/help显示帮助;/任何搜索条件 发送斗图表情" style="width:90%" v-model="tosend" @keyup.enter.native="send"></el-input>
         </div>
         <div id="chat" style="margin-bottom: 100px; overflow: auto;padding:3px" :style="{'height':ch}">
             <div v-for="m in messages" style="margin-top: 1px">
