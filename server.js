@@ -36,7 +36,7 @@ client.on('message', function (topic, message) {
 
     if(topic == default_topic){
         messages.push(  payload)
-        if(messages.maxlength>4){
+        if(messages.maxlength>maxlength){
             messages.shift()
         }
         console.log(messages)
