@@ -18,6 +18,7 @@ Date.prototype.format = function(format) //author: meizz
     return format;
 }
 
+
 function scroll() {
     setTimeout(function () {
         var scrollDom = document.getElementById('chat');
@@ -123,7 +124,7 @@ window.vm=new Vue({el:'body>div',data:{
                     type:'alert',
                     alert:'名字已经修改为:' + window.chatname
                 })
-            }
+            }else
             if(this.tosend.indexOf('/help') == 0){
                 vm.messages.push({
                     type:'alert',
@@ -131,7 +132,7 @@ window.vm=new Vue({el:'body>div',data:{
                     description:
                         `[修改自己的名字    /name 名字] [滑稽  /huaji]`
                 })
-            }
+            }else
             if(this.tosend.indexOf('/huaji') == 0){
                 var rand = Math.floor( Math.random()*huajilist.length)
                 var content = {
@@ -143,6 +144,13 @@ window.vm=new Vue({el:'body>div',data:{
                 var payload = ({ type:1, content: content })
                 var message = new Paho.MQTT.Message(JSON.stringify(payload))
                 message.destinationName = topic
+                client.send(message)
+            }else{
+                var key = this.tosend.substr(1)
+                var chatname = window.chatname
+                var payload = ({ key:key, chatname: chatname })
+                var message = new Paho.MQTT.Message(JSON.stringify(payload))
+                message.destinationName = topic+'_doutu'
                 client.send(message)
             }
         }else{
