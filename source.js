@@ -88,6 +88,11 @@ window.vm=new Vue({el:'body>div',data:{
     watch:{
         messages:function () {
             scroll()
+        },
+        tosend:function () {
+            if(this.tosend=='、'){
+                this.tosend='/'
+            }
         }
     },
     mounted:function(){
