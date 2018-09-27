@@ -1,8 +1,7 @@
 ## 尬聊
 
-一个简易的聊天室，可以放在github page上的静态页面 https://xcstream.github.io/achat/
 
-服务端是EMQ
+https://xcstream.github.io/achat/
 
-script部分蛤语言参考
-https://github.com/xcstream/hama
+可以发表情 /任何文字
+
