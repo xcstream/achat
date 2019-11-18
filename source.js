@@ -37,7 +37,7 @@ var huajilist = `
     11.jpeg 15.jpeg 19.jpeg 22.jpeg 26.jpeg 3.jpeg  33.gif  4.jpeg  8.jpeg`.split(' ').filter(x=>x.length>3)
 
 var clientid = ""+Math.random() + new Date().getTime()
-var client = new Paho.MQTT.Client("am.appxc.com", Number(8084), clientid)
+var client = new Paho.MQTT.Client("j.appxc.com", Number(8084), clientid)
 window.chatname = localStorage['chatname']||'匿名用户'
 client.onMessageArrived = function(message) {
     var payload = JSON.parse(message.payloadString)
